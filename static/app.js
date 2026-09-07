@@ -895,27 +895,31 @@ const sheet = document.getElementById("course");
 const handle = document.querySelector(".sheet-handle");
 
 const NAV_HEIGHT = 65;
-const POSITIONS = [
-    window.innerHeight * 0.65 - NAV_HEIGHT, // small
-    window.innerHeight * 0.40, // medium
-    0                          // large
-];
+
+function getPositions() {
+    return [
+        window.innerHeight * 0.65 - NAV_HEIGHT, // small
+        window.innerHeight * 0.40,              // medium
+        0                                       // large
+    ];
+}
+
+let POSITIONS = getPositions();
 
 let currentState = 1;
 
 let startY = 0;
-let startTranslate = 0;
+let startTranslate = POSITIONS[1];
 let currentTranslate = POSITIONS[1];
 
 let dragging = false;
 
 
-function setSheetPosition(position)
-{
+function setSheetPosition(position) {
     currentTranslate = position;
 
     sheet.style.transform =
-        `translateY(${position}px)`;
+        `translate3d(0, ${position}px, 0)`;
 }
 
 
@@ -944,62 +948,101 @@ function snapToNearest()
 }
 
 
-handle.addEventListener("pointerdown", e =>
-{
+handle.addEventListener("pointerdown", e => {
     dragging = true;
 
     startY = e.clientY;
     startTranslate = currentTranslate;
 
+    // ドラッグ中はアニメーションを無効化
     sheet.classList.add("dragging");
+
+    // 他の処理にタッチを奪われにくくする
+    handle.setPointerCapture(e.pointerId);
 });
 
 
-document.addEventListener("pointermove", e =>
-{
+handle.addEventListener("pointermove", e => {
     if (!dragging) return;
 
-    const deltaY =
-        e.clientY - startY;
+    const deltaY = e.clientY - startY;
 
-    let nextPosition =
-        startTranslate + deltaY;
+    let nextPosition = startTranslate + deltaY;
 
-    // 上限
-    if (nextPosition < 0)
-    {
-        nextPosition = 0;
+    // 上限：large
+    if (nextPosition < POSITIONS[2]) {
+        nextPosition = POSITIONS[2];
     }
 
-    // 下限
-    if (
-        nextPosition >
-        window.innerHeight * 0.65
-    )
-    {
-        nextPosition =
-            window.innerHeight * 0.65;
+    // 下限：small
+    if (nextPosition > POSITIONS[0]) {
+        nextPosition = POSITIONS[0];
     }
 
     currentTranslate = nextPosition;
 
     sheet.style.transform =
-        `translateY(${nextPosition}px)`;
+        `translate3d(0, ${nextPosition}px, 0)`;
 });
 
 
-document.addEventListener("pointerup", () =>
-{
+handle.addEventListener("pointerup", e => {
     if (!dragging) return;
 
     dragging = false;
 
+    sheet.classList.remove("dragging");
+
+    try {
+        handle.releasePointerCapture(e.pointerId);
+    } catch (error) {
+        // 何もしない
+    }
+
     snapToNearest();
 });
 
-setSheetPosition(
-    POSITIONS[currentState]
-);
+
+handle.addEventListener("pointercancel", e => {
+    if (!dragging) return;
+
+    dragging = false;
+
+    sheet.classList.remove("dragging");
+
+    try {
+        handle.releasePointerCapture(e.pointerId);
+    } catch (error) {
+        // 何もしない
+    }
+
+    snapToNearest();
+});
+
+
+function snapToNearest() {
+    let nearestIndex = 0;
+    let nearestDistance = Infinity;
+
+    POSITIONS.forEach((position, index) => {
+        const distance =
+            Math.abs(currentTranslate - position);
+
+        if (distance < nearestDistance) {
+            nearestDistance = distance;
+            nearestIndex = index;
+        }
+    });
+
+    currentState = nearestIndex;
+
+    sheet.classList.remove("dragging");
+
+    setSheetPosition(POSITIONS[currentState]);
+}
+
+
+setSheetPosition(POSITIONS[currentState]);
 
 // ======================
 // 下部ナビゲーション
