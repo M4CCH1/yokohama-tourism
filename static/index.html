@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+< lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>横浜観光モデルコース</title>
+
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet/dist/leaflet.css"
+    >
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ヘッダー -->
+    <header class="top-bar">
+        <h1>横浜観光プランナー</h1>
+    </header>
+
+    <!-- 地図 -->
+    <div id="map"></div>
+
+    <!-- モデルコースパネル -->
+    <div id="course" class="state-medium">
+
+
+
+        <div class="sheet-handle"></div>
+
+        <!-- リスト画面 -->
+        <div id="list-view">
+
+            <!-- 開始地点 -->
+            <div class="form-group">
+
+                <label>
+                    開始地点
+                </label>
+
+                <select id="start-point-select">
+                    <option value="">
+                        開始地点を選択
+                    </option>
+                </select>
+
+            </div>
+
+            <!-- スポット一覧 -->
+            <div id="course-list">
+
+                <p>
+                    まだスポットが追加されていません。
+                </p>
+
+            </div>
+
+            <button
+                id="shortest-course-button"
+                onclick="createShortestCourse()">
+
+                最短コースを作成
+
+            </button>
+
+        </div>
+
+        <!-- ルート画面 -->
+        <div id="route-view" style="display:none;">
+
+            <h2>ルート案内</h2>
+
+            <div id="route-info"></div>
+
+            <p id="total-time">
+                合計滞在時間：0分
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- 下部ナビゲーションバー -->
+    <nav id="bottom-nav">
+
+        <button
+            id="list-tab"
+            class="nav-item active"
+            onclick="showListTab()">
+
+            <span class="nav-icon">📋</span>
+            <span>リスト</span>
+
+        </button>
+
+        <button
+            id="route-tab"
+            class="nav-item"
+            onclick="showRouteTab()">
+
+            <span class="nav-icon">🛣️</span>
+            <span>ルート</span>
+
+        </button>
+
+    </nav>
+
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="app.js"></script>
+
+</body>
+</html>
