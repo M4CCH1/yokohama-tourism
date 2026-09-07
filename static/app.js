@@ -948,76 +948,61 @@ function snapToNearest()
 }
 
 
-handle.addEventListener("pointerdown", e => {
-    dragging = true;
-
-    startY = e.clientY;
-    startTranslate = currentTranslate;
-
-    // ドラッグ中はアニメーションを無効化
-    sheet.classList.add("dragging");
-
-    // 他の処理にタッチを奪われにくくする
-    handle.setPointerCapture(e.pointerId);
-});
 
 
-handle.addEventListener("pointermove", e => {
-    if (!dragging) return;
+function getPositions() {
+    return [
+        window.innerHeight * 0.65 - NAV_HEIGHT, // small
+        window.innerHeight * 0.40,              // medium
+        0                                       // large
+    ];
+}
 
-    const deltaY = e.clientY - startY;
 
-    let nextPosition = startTranslate + deltaY;
 
-    // 上限：large
-    if (nextPosition < POSITIONS[2]) {
-        nextPosition = POSITIONS[2];
-    }
 
-    // 下限：small
-    if (nextPosition > POSITIONS[0]) {
-        nextPosition = POSITIONS[0];
-    }
-
-    currentTranslate = nextPosition;
+function setSheetPosition(position) {
+    currentTranslate = position;
 
     sheet.style.transform =
-        `translate3d(0, ${nextPosition}px, 0)`;
-});
+        `translate3d(0, ${position}px, 0)`;
+}
 
 
-handle.addEventListener("pointerup", e => {
-    if (!dragging) return;
+// シートをタップしたら次の位置へ
+sheet.addEventListener("click", function(e) {
 
-    dragging = false;
-
-    sheet.classList.remove("dragging");
-
-    try {
-        handle.releasePointerCapture(e.pointerId);
-    } catch (error) {
-        // 何もしない
+    // ボタンやセレクトボックスをタップした場合は
+    // シートの開閉処理を実行しない
+    if (
+        e.target.closest("button") ||
+        e.target.closest("select") ||
+        e.target.closest("input")
+    ) {
+        return;
     }
 
-    snapToNearest();
-});
+    currentState++;
 
-
-handle.addEventListener("pointercancel", e => {
-    if (!dragging) return;
-
-    dragging = false;
-
-    sheet.classList.remove("dragging");
-
-    try {
-        handle.releasePointerCapture(e.pointerId);
-    } catch (error) {
-        // 何もしない
+    if (currentState >= POSITIONS.length) {
+        currentState = 0;
     }
 
-    snapToNearest();
+    setSheetPosition(POSITIONS[currentState]);
 });
+
+
+// 画面サイズが変わった場合
+window.addEventListener("resize", function() {
+
+    POSITIONS = getPositions();
+
+    setSheetPosition(POSITIONS[currentState]);
+});
+
+
+// 初期位置
+setSheetPosition(POSITIONS[currentState]);
 
 
 function snapToNearest() {

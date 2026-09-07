@@ -48,8 +48,8 @@ body {
     align-items: center;
     justify-content: center;
     margin: 0;
-    touch-action: none;
-    cursor: grab;
+    touch-action: manipulation;
+    cursor: pointer;
 }
 
 .sheet-handle::after {
@@ -151,10 +151,6 @@ body {
     position: fixed;
     left: 0;
     right: 0;
-    /*
-     * 下部ナビゲーションバーの高さ
-     * 65px分を空ける
-     */
     bottom: 65px;
     height: 90vh;
     background: white;
@@ -163,6 +159,7 @@ body {
     box-sizing: border-box;
     overflow-y: auto;
     box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
     transition: transform 0.25s ease;
     z-index: 1500;
     touch-action: pan-y;
