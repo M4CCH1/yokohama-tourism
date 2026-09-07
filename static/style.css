@@ -43,7 +43,7 @@ body {
 /* ドラッグバー風 */
 .sheet-handle {
     width: 100%;
-    height: 80px;
+    height: 200px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -54,7 +54,7 @@ body {
 
 .sheet-handle::after {
     content: "";
-    width: 80px;
+    width: 200px;
     height: 5px;
     background: #ccc;
     border-radius: 10px;
