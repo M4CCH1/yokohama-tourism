@@ -899,9 +899,13 @@ const NAV_HEIGHT = 65;
 function getPositions() {
     return [
         window.innerHeight * 0.65 - NAV_HEIGHT, // small
+
         window.innerHeight * 0.40,              // medium
-        0                                       // large
+
+        window.innerHeight * 0.12               // large
+
     ];
+
 }
 
 let POSITIONS = getPositions();
