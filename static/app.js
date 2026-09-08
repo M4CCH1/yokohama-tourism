@@ -902,7 +902,7 @@ function getPositions() {
 
         window.innerHeight * 0.40,              // medium
 
-        window.innerHeight * 0.20               // large
+        window.innerHeight * 0.25               // large
 
     ];
 
