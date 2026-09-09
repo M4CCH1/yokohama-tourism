@@ -959,28 +959,92 @@ function setSheetPosition(position) {
 }
 
 
-// シートをタップしたら次の位置へ
-sheet.addEventListener("click", function(e) {
+handle.addEventListener("pointerdown", e => {
 
-    // ボタンやセレクトボックスをタップした場合は
-    // シートの開閉処理を実行しない
-    if (
-        e.target.closest("button") ||
-        e.target.closest("select") ||
-        e.target.closest("input")
-    ) {
-        return;
-    }
+    dragging = true;
 
-    currentState++;
+    startY = e.clientY;
+    startTranslate = currentTranslate;
 
-    if (currentState >= POSITIONS.length) {
-        currentState = 0;
-    }
+    sheet.classList.add("dragging");
 
-    setSheetPosition(POSITIONS[currentState]);
+    handle.setPointerCapture(e.pointerId);
+
 });
 
+
+handle.addEventListener("pointermove", e => {
+
+    if (!dragging) return;
+
+    const deltaY =
+        e.clientY - startY;
+
+    let nextPosition =
+        startTranslate + deltaY;
+
+
+    // 上限
+    if (nextPosition < POSITIONS[2]) {
+        nextPosition = POSITIONS[2];
+    }
+
+    // 下限
+    if (nextPosition > POSITIONS[0]) {
+        nextPosition = POSITIONS[0];
+    }
+
+    currentTranslate = nextPosition;
+
+    sheet.style.transform =
+        `translate3d(0, ${nextPosition}px, 0)`;
+
+});
+
+
+handle.addEventListener("pointerup", e => {
+
+    if (!dragging) return;
+
+    dragging = false;
+
+    sheet.classList.remove("dragging");
+
+    try {
+        handle.releasePointerCapture(e.pointerId);
+    } catch {}
+
+    snapToNearest();
+
+});
+
+
+function snapToNearest() {
+
+    let nearestIndex = 0;
+    let nearestDistance = Infinity;
+
+    POSITIONS.forEach((position, index) => {
+
+        const distance =
+            Math.abs(currentTranslate - position);
+
+        if (distance < nearestDistance) {
+
+            nearestDistance = distance;
+            nearestIndex = index;
+
+        }
+
+    });
+
+    currentState = nearestIndex;
+
+    setSheetPosition(
+        POSITIONS[currentState]
+    );
+
+}
 
 // 画面サイズが変わった場合
 window.addEventListener("resize", function() {
