@@ -355,9 +355,9 @@ function addToCourse(id, name, stayMinutes, latitude, longitude) {
         longitude: longitude
     });
 
-    displaySpotList();
 
     alert(`${name}をリストに追加しました`);
+    displaySpotList();
 }
 
 
