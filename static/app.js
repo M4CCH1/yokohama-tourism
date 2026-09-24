@@ -917,42 +917,31 @@ let currentTranslate = POSITIONS[1];
 
 let dragging = false;
 
-function snapToNearest()
-{
-    let nearestIndex = 0;
-    let nearestDistance = Infinity;
 
-    POSITIONS.forEach((pos, index) =>
-    {
-        const distance =
-            Math.abs(currentTranslate - pos);
-
-        if (distance < nearestDistance)
-        {
-            nearestDistance = distance;
-            nearestIndex = index;
-        }
-    });
-
-    currentState = nearestIndex;
-
-    sheet.classList.remove("dragging");
-
-    setSheetPosition(POSITIONS[nearestIndex]);
-}
 
 
 
 function setSheetPosition(position) {
+
     currentTranslate = position;
 
-    sheet.style.transform =
-        `translate3d(0, ${position}px, 0)`;
+    // 画面の高さ
+    const windowHeight = window.innerHeight;
 
-    sheet.style.setProperty(
-        "--sheet-offset",
-        `${position}px`
-    );
+    // Bottom Sheetの表示高さ
+    let sheetHeight =
+        windowHeight - NAV_HEIGHT - position;
+
+    // 最低高さ
+    if (sheetHeight < 80) {
+        sheetHeight = 80;
+    }
+
+    // transformではなく高さを変更
+    sheet.style.transform = "none";
+
+    sheet.style.height =
+        `${sheetHeight}px`;
 }
 
 
@@ -991,10 +980,7 @@ handle.addEventListener("pointermove", e => {
         nextPosition = POSITIONS[0];
     }
 
-    currentTranslate = nextPosition;
-
-    sheet.style.transform =
-        `translate3d(0, ${nextPosition}px, 0)`;
+    setSheetPosition(nextPosition);
 
 });
 
@@ -1016,32 +1002,6 @@ handle.addEventListener("pointerup", e => {
 });
 
 
-function snapToNearest() {
-
-    let nearestIndex = 0;
-    let nearestDistance = Infinity;
-
-    POSITIONS.forEach((position, index) => {
-
-        const distance =
-            Math.abs(currentTranslate - position);
-
-        if (distance < nearestDistance) {
-
-            nearestDistance = distance;
-            nearestIndex = index;
-
-        }
-
-    });
-
-    currentState = nearestIndex;
-
-    setSheetPosition(
-        POSITIONS[currentState]
-    );
-
-}
 
 // 画面サイズが変わった場合
 window.addEventListener("resize", function() {
@@ -1057,14 +1017,17 @@ setSheetPosition(POSITIONS[currentState]);
 
 
 function snapToNearest() {
+
     let nearestIndex = 0;
     let nearestDistance = Infinity;
 
     POSITIONS.forEach((position, index) => {
+
         const distance =
             Math.abs(currentTranslate - position);
 
         if (distance < nearestDistance) {
+
             nearestDistance = distance;
             nearestIndex = index;
         }
@@ -1074,7 +1037,9 @@ function snapToNearest() {
 
     sheet.classList.remove("dragging");
 
-    setSheetPosition(POSITIONS[currentState]);
+    setSheetPosition(
+        POSITIONS[currentState]
+    );
 }
 
 

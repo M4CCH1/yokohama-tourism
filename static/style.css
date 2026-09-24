@@ -178,15 +178,24 @@ body {
     left: 8px;
     right: 8px;
 
+    /* ナビゲーションバーより上に固定 */
     bottom: calc(65px + env(safe-area-inset-bottom));
 
-    height: 90vh;
+    /* JavaScriptで高さを変更する */
+    height: 50vh;
+
+    /* 最大でも画面内に収める */
+    max-height: calc(
+        100dvh - 65px - env(safe-area-inset-bottom) - 16px
+    );
+
+    min-height: 80px;
 
     background: #fff;
 
     border-radius: 24px 24px 0 0;
 
-    padding: 0 16px calc(24px + var(--sheet-offset, 0px));
+    padding: 0 16px 24px;
 
     box-sizing: border-box;
 
@@ -198,25 +207,12 @@ body {
 
     z-index: 1500;
 
-    transition: transform 0.25s ease;
+    transition: height 0.25s ease;
 
     -webkit-overflow-scrolling: touch;
-}
 
-
-/* 半開き */
-#course.state-small {
-    transform: translateY(calc(90vh - 65px));
-}
-
-/* 中間 */
-#course.state-medium {
-    transform: translateY(40vh);
-}
-
-/* 全開 */
-#course.state-large {
-    transform: translateY(0);
+    /* translateYは使用しない */
+    transform: none;
 }
 
 
