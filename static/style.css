@@ -179,7 +179,7 @@ body {
     right: 8px;
 
     /* ナビゲーションバーより上に固定 */
-    bottom: calc(120px + env(safe-area-inset-bottom));
+    bottom: calc(65px + env(safe-area-inset-bottom));
 
     /* JavaScriptで高さを変更する */
     height: 50vh;
