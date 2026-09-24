@@ -356,6 +356,8 @@ function addToCourse(id, name, stayMinutes, latitude, longitude) {
     });
 
     displaySpotList();
+
+    alert(`${name}をリストに追加しました`);
 }
 
 
@@ -916,15 +918,6 @@ let currentTranslate = POSITIONS[1];
 
 let dragging = false;
 
-
-function setSheetPosition(position) {
-    currentTranslate = position;
-
-    sheet.style.transform =
-        `translate3d(0, ${position}px, 0)`;
-}
-
-
 function snapToNearest()
 {
     let nearestIndex = 0;
@@ -956,6 +949,11 @@ function setSheetPosition(position) {
 
     sheet.style.transform =
         `translate3d(0, ${position}px, 0)`;
+
+    sheet.style.setProperty(
+        "--sheet-offset",
+        `${position}px`
+    );
 }
 
 
