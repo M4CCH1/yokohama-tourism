@@ -18,6 +18,9 @@ let courseSpots = [];
 let routeLine = null;
 let routeSegments = [];
 
+// コース作成できる観光スポットの最大件数
+const MAX_COURSE_SPOTS = 7;
+
 // 2地点間の距離を計算する
 function calculateDistance(lat1, lon1, lat2, lon2) {
 
@@ -57,6 +60,11 @@ async function createShortestCourse() {
         return;
     }
 
+    // 最大件数の確認
+    if (courseSpots.length > MAX_COURSE_SPOTS) {
+        alert(`コース作成は最大${MAX_COURSE_SPOTS}か所までです。7か所以下にしてください。`);
+        return;
+    }
 
     // 処理中表示
     const button =
