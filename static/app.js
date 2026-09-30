@@ -18,8 +18,6 @@ let courseSpots = [];
 let routeLine = null;
 let routeSegments = [];
 
-
-
 // 2地点間の距離を計算する
 function calculateDistance(lat1, lon1, lat2, lon2) {
 
@@ -59,11 +57,6 @@ async function createShortestCourse() {
         return;
     }
 
-    // 最大件数の確認
-    if (courseSpots.length > 7) {
-        alert(`コース作成は最大7か所までです。7か所以下にしてください。`);
-        return;
-    }
 
     // 処理中表示
     const button =
@@ -233,7 +226,7 @@ fetch('/spots')
                     <h3>${spot.name}</h3>
 
                     <p>
-                        カテゴリ: ${spot.category}<br>
+                        概要: ${spot.description}<br>
                         滞在時間: ${spot.stay_minutes}分
                     </p>
 
