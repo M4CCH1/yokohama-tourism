@@ -57,6 +57,10 @@ async function createShortestCourse() {
         return;
     }
 
+    if (courseSpots.length > 7) {
+        alert(`コース作成は最大7か所までです。7か所以下にしてください。`);
+        return;
+    }
 
     // 処理中表示
     const button =
